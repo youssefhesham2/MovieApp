@@ -5,13 +5,23 @@ import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.domain.entities.ResultsDomainEntity
 import com.example.movieapp.R
+import com.example.movieapp.adapters.MovieAdapter
 import com.example.movieapp.databinding.MoviesFragmentBinding
+import com.example.movieapp.extensions.isInternetConnected
 import com.example.movieapp.ui.frgaments.base.BaseFragment
+import com.example.movieapp.utils.LoadingState
 
 class MoviesFragment : BaseFragment() {
     private lateinit var binding: MoviesFragmentBinding
+    private val moviesViewModel: MoviesViewModel by viewModels()
+    private var movieAdapter: MovieAdapter? = null
+    private var movies = ArrayList<ResultsDomainEntity>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,14 +34,21 @@ class MoviesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handleSettingMenu()
+        setupSettingMenu()
+        setupMoviesRecyclerView()
+        getMostPopularMovies()
     }
+
 
     override fun observeViewModel() {
-        // TODO add observers
+        observeLoading()
+        observeMovies()
+        observeEdgeCase()
+        observeFailure()
+        observeException()
     }
 
-    private fun handleSettingMenu() {
+    private fun setupSettingMenu() {
         val menuHost: MenuHost = requireActivity()
 
         menuHost.addMenuProvider(object : MenuProvider {
@@ -42,12 +59,12 @@ class MoviesFragment : BaseFragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.most_popular -> {
-                        //TODO    if (menuItem.isChecked) get most popular movies
+                        if (!menuItem.isChecked) getMostPopularMovies()
                         menuItem.isChecked = true
                         true
                     }
                     R.id.top_rated -> {
-                        //TODO    if (menuItem.isChecked) get top rated movies
+                        if (!menuItem.isChecked) getTopRatedMovies()
                         menuItem.isChecked = true
                         true
                     }
@@ -55,5 +72,93 @@ class MoviesFragment : BaseFragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupMoviesRecyclerView() {
+        binding.rvMovies.layoutManager = GridLayoutManager(requireActivity(), 3)
+        movieAdapter = MovieAdapter(movies) {
+            //TODO Intent to movie details fragment
+        }
+        binding.rvMovies.adapter = movieAdapter
+    }
+
+    private fun getMostPopularMovies() {
+        moviesViewModel.fetchMostPopularMovies(isInternetConnected())
+    }
+
+    private fun getTopRatedMovies() {
+        moviesViewModel.fetchTopRatedMovies(isInternetConnected())
+    }
+
+    private fun isInternetConnected(): Boolean = requireActivity().application.isInternetConnected()
+
+    private fun observeLoading() {
+        moviesViewModel.loading.observe(requireActivity(), Observer { loadingState ->
+            when (loadingState) {
+                LoadingState.SHOW -> {
+                    hideEdgeCase()
+                    hideMoviesRecyclerView()
+                    showProgress()
+                }
+                LoadingState.DISMISS -> hideProgress()
+            }
+            movieAdapter?.addMovies(movies)
+        })
+    }
+
+    private fun observeMovies() {
+        moviesViewModel.movies.observe(requireActivity(), Observer { movies ->
+            hideEdgeCase()
+            showMoviesRecyclerView()
+            movieAdapter?.addMovies(movies)
+        })
+    }
+
+    private fun observeEdgeCase() {
+        moviesViewModel.edgeCase.observe(requireActivity(), Observer { message ->
+            hideMoviesRecyclerView()
+            showEdgeCase()
+            binding.tvEdgeCase.text = message
+        })
+    }
+
+    private fun observeFailure() {
+        moviesViewModel.failure.observe(requireActivity(), Observer { errorResponse ->
+            hideMoviesRecyclerView()
+            showEdgeCase()
+            binding.tvEdgeCase.text = errorResponse.status_message
+        })
+    }
+
+    private fun observeException() {
+        moviesViewModel.exception.observe(requireActivity(), Observer { throwable ->
+            hideMoviesRecyclerView()
+            showEdgeCase()
+            binding.tvEdgeCase.text = throwable.localizedMessage
+        })
+    }
+
+    private fun hideProgress() {
+        binding.progressLoading.visibility = View.GONE
+    }
+
+    private fun showProgress() {
+        binding.progressLoading.visibility = View.VISIBLE
+    }
+
+    private fun showEdgeCase() {
+        binding.tvEdgeCase.visibility = View.VISIBLE
+    }
+
+    private fun hideEdgeCase() {
+        binding.tvEdgeCase.visibility = View.GONE
+    }
+
+    private fun showMoviesRecyclerView() {
+        binding.rvMovies.visibility = View.VISIBLE
+    }
+
+    private fun hideMoviesRecyclerView() {
+        binding.rvMovies.visibility = View.GONE
     }
 }
