@@ -15,6 +15,7 @@ import com.example.movieapp.adapters.MovieAdapter
 import com.example.movieapp.databinding.MoviesFragmentBinding
 import com.example.movieapp.extensions.isInternetConnected
 import com.example.movieapp.ui.frgaments.base.BaseFragment
+import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.LoadingState
 
 class MoviesFragment : BaseFragment() {
@@ -22,7 +23,7 @@ class MoviesFragment : BaseFragment() {
     private val moviesViewModel: MoviesViewModel by viewModels()
     private var movieAdapter: MovieAdapter? = null
     private var movies = ArrayList<ResultsDomainEntity>()
-
+    private var idLastItemSelectedFromSettingsMenu: Int? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,11 +35,28 @@ class MoviesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        restoreInstanceState(savedInstanceState)
         setupSettingMenu()
         setupMoviesRecyclerView()
-        getMostPopularMovies()
+        if (savedInstanceState == null) {
+            getMostPopularMovies()
+        }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        idLastItemSelectedFromSettingsMenu?.let {
+            outState.putInt(
+                Constants.ITEM_SETTING_MENU,
+                it
+            )
+        }
+    }
+
+    private fun restoreInstanceState(savedInstanceState: Bundle?) {
+        idLastItemSelectedFromSettingsMenu =
+            savedInstanceState?.getInt(Constants.ITEM_SETTING_MENU)
+    }
 
     override fun observeViewModel() {
         observeLoading()
@@ -54,9 +72,15 @@ class MoviesFragment : BaseFragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.setting_menu, menu)
+                idLastItemSelectedFromSettingsMenu?.let { menu.findItem(it).isChecked = true }
+                    ?: run {
+                        idLastItemSelectedFromSettingsMenu = R.id.most_popular
+                        menu.findItem(idLastItemSelectedFromSettingsMenu!!).isChecked = true
+                    }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                idLastItemSelectedFromSettingsMenu = menuItem.itemId
                 return when (menuItem.itemId) {
                     R.id.most_popular -> {
                         if (!menuItem.isChecked) getMostPopularMovies()
