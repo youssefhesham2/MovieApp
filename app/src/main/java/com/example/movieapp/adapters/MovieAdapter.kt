@@ -39,7 +39,7 @@ class MovieAdapter(
     override fun getItemCount(): Int = movies.size
 
     fun addMovies(movieList: List<ResultsDomainEntity>) {
-        movies= movieList as ArrayList<ResultsDomainEntity>
+        movies = movieList as ArrayList<ResultsDomainEntity>
         notifyDataSetChanged()
     }
 
