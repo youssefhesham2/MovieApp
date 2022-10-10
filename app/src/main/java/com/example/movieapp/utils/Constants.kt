@@ -5,4 +5,6 @@ object Constants {
     const val EMPTY="NO Data Found please try aging soon!"
 
     const val ITEM_SETTING_MENU="idLastItemSelectedFromSettingsMenu"
+    const val MOVIE_KEY="movie"
+    const val MOVIES_LIST="movies_list"
 }
