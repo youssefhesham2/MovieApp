@@ -7,5 +7,5 @@ data class Results(
     val overview: String,
     var poster_path: String,
     val release_date: String,
-    val vote_average: Double,
+    val vote_average: Float,
 )
