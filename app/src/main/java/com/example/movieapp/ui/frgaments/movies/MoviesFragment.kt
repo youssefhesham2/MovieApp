@@ -2,12 +2,14 @@ package com.example.movieapp.ui.frgaments.movies
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.entities.ResultsDomainEntity
 import com.example.movieapp.R
@@ -17,6 +19,7 @@ import com.example.movieapp.extensions.isInternetConnected
 import com.example.movieapp.ui.frgaments.base.BaseFragment
 import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.LoadingState
+import java.io.Serializable
 
 class MoviesFragment : BaseFragment() {
     private lateinit var binding: MoviesFragmentBinding
@@ -24,6 +27,12 @@ class MoviesFragment : BaseFragment() {
     private var movieAdapter: MovieAdapter? = null
     private var movies = ArrayList<ResultsDomainEntity>()
     private var idLastItemSelectedFromSettingsMenu: Int? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        restoreInstanceState(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,12 +44,9 @@ class MoviesFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        restoreInstanceState(savedInstanceState)
         setupSettingMenu()
         setupMoviesRecyclerView()
-        if (savedInstanceState == null) {
-            getMostPopularMovies()
-        }
+        if (movies.isEmpty()) getMostPopularMovies()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -106,8 +112,10 @@ class MoviesFragment : BaseFragment() {
 
     private fun setupMoviesRecyclerView() {
         binding.rvMovies.layoutManager = GridLayoutManager(requireActivity(), 3)
-        movieAdapter = MovieAdapter(movies) {
-            //TODO Intent to movie details fragment
+        movieAdapter = MovieAdapter(movies) { movie ->
+            val bundle = bundleOf(Constants.MOVIE_KEY to movie)
+            view?.findNavController()
+                ?.navigate(R.id.action_moviesFragment_to_movieDetailsFragment, bundle)
         }
         binding.rvMovies.adapter = movieAdapter
     }
@@ -137,9 +145,10 @@ class MoviesFragment : BaseFragment() {
     }
 
     private fun observeMovies() {
-        moviesViewModel.movies.observe(requireActivity(), Observer { movies ->
+        moviesViewModel.movies.observe(requireActivity(), Observer {
             hideEdgeCase()
             showMoviesRecyclerView()
+            movies = it as ArrayList
             movieAdapter?.addMovies(movies)
         })
     }
