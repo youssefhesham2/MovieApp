@@ -51,11 +51,17 @@ class MoviesFragment : BaseFragment() {
                 it
             )
         }
+
+        outState.putSerializable(Constants.MOVIES_LIST, movies as Serializable)
     }
 
     private fun restoreInstanceState(savedInstanceState: Bundle?) {
-        idLastItemSelectedFromSettingsMenu =
-            savedInstanceState?.getInt(Constants.ITEM_SETTING_MENU)
+        savedInstanceState?.getInt(Constants.ITEM_SETTING_MENU)
+            ?.let { idLastItemSelectedFromSettingsMenu = it }
+
+        savedInstanceState?.getSerializable(Constants.MOVIES_LIST)?.let {
+            movies = it as ArrayList<ResultsDomainEntity>
+        }
     }
 
     override fun observeViewModel() {
