@@ -31,11 +31,12 @@ class MoviesViewModel(
     val edgeCase = MutableLiveData<String>()
     val failure = MutableLiveData<ErrorResponseDomainEntity>()
     val exception = MutableLiveData<Throwable>()
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.e(TAG, "🤬 Exception $throwable in context:$coroutineContext")
-        loading.postValue(LoadingState.DISMISS)
-        exception.postValue(throwable)
-    }
+    private val coroutineExceptionHandler =
+        CoroutineExceptionHandler { coroutineContext, throwable ->
+            Log.e(TAG, "🤬 Exception $throwable in context:$coroutineContext")
+            loading.postValue(LoadingState.DISMISS)
+            exception.postValue(throwable)
+        }
 
     fun fetchMostPopularMovies(isInternetConnected: Boolean) {
         loading.postValue(LoadingState.SHOW)
