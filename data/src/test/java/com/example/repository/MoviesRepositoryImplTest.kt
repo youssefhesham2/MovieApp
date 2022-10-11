@@ -18,8 +18,8 @@ class MoviesRepositoryImplTest {
     fun `given networkConnection and Successful API response when getPopularMovies() then must return Successfully DataState with list of ResultsDomainEntity`() {
         //arranges
         val movies = ArrayList<Results>()
-        movies.add(Results(1, "movie1", "title2", "overview", "", "2022", 5.0))
-        movies.add(Results(2, "movie2", "title2", "overview", "", "2022", 5.0))
+        movies.add(Results(1, "movie1", "title2", "overview", "", "2022", 5.0f))
+        movies.add(Results(2, "movie2", "title2", "overview", "", "2022", 5.0f))
 
         val isInternetConnected = true
         val rootResponse = RootResponse(movies)
@@ -142,8 +142,8 @@ class MoviesRepositoryImplTest {
     fun `given networkConnection and Successful API response when getTopRatedMovies() then must return Successfully DataState with list of ResultsDomainEntity`() {
         //arranges
         val topRatedMovies = ArrayList<Results>()
-        topRatedMovies.add(Results(1, "movie1", "title2", "overview", "", "2022", 5.0))
-        topRatedMovies.add(Results(2, "movie2", "title2", "overview", "", "2022", 5.0))
+        topRatedMovies.add(Results(1, "movie1", "title2", "overview", "", "2022", 5.0f))
+        topRatedMovies.add(Results(2, "movie2", "title2", "overview", "", "2022", 5.0f))
 
         val isInternetConnected = true
         val rootResponse = RootResponse(topRatedMovies)

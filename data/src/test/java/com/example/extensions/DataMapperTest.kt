@@ -12,13 +12,13 @@ class DataMapperTest {
     @Test
     fun `given an Results DataEntity when Map to DomainEntity then return ResultsDomainEntity with same data`() {
         //arranges
-        val resultDataEntity = Results(1, "tes1", "test1", "test1", "path", "release", 1.5)
+        val resultDataEntity = Results(1, "tes1", "test1", "test1", "path", "release", 1.5f)
 
         //action
         val actual = resultDataEntity.toDomainEntity()
 
         //assertion
-        val expected = ResultsDomainEntity(1, "tes1", "test1", "test1", "path", "release", 1.5)
+        val expected = ResultsDomainEntity(1, "tes1", "test1", "test1", "path", "release", 1.5f)
         Assert.assertEquals(expected, actual)
     }
 
