@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/layout/activity_main.xml" value="0.24010416666666667" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/drawable/movie_details_shape.xml" value="0.123" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/layout/activity_main.xml" value="0.12" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/layout/movie_details_fragment.xml" value="0.12" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/layout/movie_item.xml" value="0.152" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/layout/movies_fragment.xml" value="0.11197916666666667" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/menu/setting_menu.xml" value="0.2" />
+        <entry key="..\:/android projects 2022/MovieApp/app/src/main/res/menu/setting_movies.xml" value="0.11302083333333333" />
       </map>
     </option>
   </component>
