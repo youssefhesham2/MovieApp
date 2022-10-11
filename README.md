@@ -38,3 +38,11 @@ https://user-images.githubusercontent.com/64506232/194977688-b2323ccf-e883-4f04-
 - GetTopRatedMoviesUseCase() must invoke getTopRatedMovies from MoviesRepository
 - Map DataEntity to DomainEntity must DomainEntity
 - resolvePosterPath must return full ImageUrl (BaseUrl + image size + PosterPath)
+# Tasks breakdown and estimates 📝
+- App creation: 1H
+- Creating UI: 3H 
+- Getting the most popular and top-rated movies from remote: 3H
+- Handle error response: 1H
+- Handle the movie fragment with its ViewModel: 3H
+- Handle Configuration Changes: 1H
+- Handle the movie details fragment with its ViewModel: 1H
