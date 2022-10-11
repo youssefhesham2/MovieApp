@@ -1,5 +1,5 @@
 # MovieApp
-Android Application consisting of only 1 Activity and 2 fragments when the user opens the app should check the network connectivity and if the device is connected to the internet then get the most popular and top-rated movies. when the user taps on any movie we will tra transition to the movie details screen.
+Android Application consisting of only 1 Activity and 2 fragments when the user opens the app should check the network connectivity and if the device is connected to the internet then get the most popular and top-rated movies. when the user taps on any movie we will transition to the movie details screen.
 # Tech Stack
 - Clean Architecture with MVVM
 - Modularity
