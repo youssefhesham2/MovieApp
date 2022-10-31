@@ -18,10 +18,10 @@ import com.example.movieapp.utils.LoadingState
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class MoviesViewModel(
+open class MoviesViewModel(
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val IODispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val moviesRepository: MoviesRepository = MoviesRepositoryImpl(),
+    val moviesRepository: MoviesRepository = MoviesRepositoryImpl(),
     private val getMostPopularMoviesUseCase: GetMostPopularMoviesUseCase = getMostPopularMoviesUseCaseImpl,
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = getTopRatedMoviesUseCaseImpl
 ) : ViewModel() {

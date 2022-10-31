@@ -6,9 +6,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.entities.ResultsDomainEntity
@@ -21,13 +21,14 @@ import com.example.movieapp.utils.Constants
 import com.example.movieapp.utils.LoadingState
 import java.io.Serializable
 
+
 class MoviesFragment : BaseFragment() {
     private lateinit var binding: MoviesFragmentBinding
-    private val moviesViewModel: MoviesViewModel by viewModels()
+    private lateinit var moviesViewModel: MoviesViewModel
+    private var moviesViewModelFactoryProvider: ViewModelProvider.Factory = MoviesViewModelFactory()
     private var movieAdapter: MovieAdapter? = null
     private var movies = ArrayList<ResultsDomainEntity>()
     private var idLastItemSelectedFromSettingsMenu: Int? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         restoreInstanceState(savedInstanceState)
@@ -38,6 +39,8 @@ class MoviesFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        moviesViewModel =
+            ViewModelProvider(this, moviesViewModelFactoryProvider)[MoviesViewModel::class.java]
         binding = DataBindingUtil.inflate(inflater, R.layout.movies_fragment, container, false)
         return binding.root
     }
@@ -199,5 +202,9 @@ class MoviesFragment : BaseFragment() {
 
     private fun hideMoviesRecyclerView() {
         binding.rvMovies.visibility = View.GONE
+    }
+
+    fun provideMoviesViewModelFactory(moviesViewModelFactory: ViewModelProvider.Factory) {
+        moviesViewModelFactoryProvider = moviesViewModelFactory
     }
 }
