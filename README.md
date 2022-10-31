@@ -5,6 +5,7 @@ Android Application consisting of only 1 Activity and 2 fragments when the user 
 - Modularity
 - Coroutines
 - Unit test
+- UI and automation testing
 - Handle Configuration Changes
 - Jetpack Navigation component
 - MenuHost
